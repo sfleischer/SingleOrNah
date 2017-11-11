@@ -53,6 +53,7 @@ class InstagramScraper(object):
         self.logger = InstagramScraper.get_logger(level=logging.DEBUG, verbose=default_attr.get('verbose'))
 
         self.posts = []
+        self.profilepic = None
         self.session = requests.Session()
         self.session.headers = {'user-agent': CHROME_WIN_UA}
 
@@ -251,6 +252,8 @@ class InstagramScraper(object):
         if resp.status_code == 200:
             payload = json.loads(resp.text)['data'][entity_name]
 
+            print json.dumps(payload)
+
             if payload:
                 nodes = []
 
@@ -342,7 +345,7 @@ class InstagramScraper(object):
             user = self.fetch_user(username)
 
             if user:
-                self.get_profile_pic(dst, executor, future_to_item, user, username)
+                self.profilepic = self.get_profile_pic(dst, executor, future_to_item, user, username)
                 self.get_stories(dst, executor, future_to_item, user, username)
 
             # Crawls the media and sends it to the executor.
@@ -372,12 +375,15 @@ class InstagramScraper(object):
                 and '11906329_960233084022564_1448528159' not in user['profile_pic_url_hd']:
             item = {'urls': [re.sub(r'/[sp]\d{3,}x\d{3,}/', '/', user['profile_pic_url_hd'])],
                     'created_time': 1286323200}
+            print item
 
             if self.latest is False or os.path.isfile(dst + '/' + item['urls'][0].split('/')[-1]) is False:
                 for item in tqdm.tqdm([item], desc='Searching {0} for profile pic'.format(username), unit=" images",
                                       ncols=0, disable=self.quiet):
                     future = executor.submit(self.download, item, dst)
                     future_to_item[future] = item
+        return re.sub(r'/[sp]\d{3,}x\d{3,}/', '/', user['profile_pic_url_hd'])
+
 
     def get_stories(self, dst, executor, future_to_item, user, username):
         """Scrapes the user's stories."""
@@ -417,10 +423,13 @@ class InstagramScraper(object):
         if self.include_location:
             media_exec = concurrent.futures.ThreadPoolExecutor(max_workers=5)
 
+        #print json.dumps(user_details, indent=4)
+
         iter = 0
         for item in tqdm.tqdm(self.query_media_gen(user_details), desc='Searching {0} for posts'.format(username),
                               unit=' media', disable=self.quiet):
             # -Filter command line
+
             if self.filter:
                 if 'tags' in item:
                     filtered = any(x in item['tags'] for x in self.filter)
@@ -673,9 +682,7 @@ class InstagramScraper(object):
 def start(kwargs):
 
     scraper = InstagramScraper(**kwargs)
-
-    scraper.scrape()
-    return json.dumps(scraper.posts, indent=4, sort_keys=True, ensure_ascii=False)
+    return scraper
 
 
 if __name__ == '__main__':
