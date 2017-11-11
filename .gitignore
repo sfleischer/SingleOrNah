@@ -1,2 +1,4 @@
 model/
 .env
+*.pyc
+*.log
