@@ -7,16 +7,18 @@ from django.shortcuts import render
 # Create your views here.
 def index(request):
     search = request.GET.get('q')
+    
+    if search:
+        values = api.api_entry(search, "phacks1", "penn123")
 
-    #profile = "https://images-na.ssl-images-amazon.com/images/M/MV5BMTQ5Nzg2MTgwMl5BMl5BanBnXkFtZTcwNTA0NjcxMw@@._V1_UY317_CR0,0,214,317_AL_.jpg"
-    values = api.api_entry(search, "phacks1", "penn123")
-
-    context = {
-        'search' : search,
-        'top1' : values['top_three'][0][0],
-        'top2' : values['top_three'][1][0],
-        'top3' : values['top_three'][2][0],
-    }
+        context = {
+            'search' : search,
+            'top1' : values['top_three'][0][0],
+            'top2' : values['top_three'][1][0],
+            'top3' : values['top_three'][2][0],
+        }
+    else:
+        context = None
     return render(request, 'index.html', context)
 
 def BlogSearchListView(request):

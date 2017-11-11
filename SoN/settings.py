@@ -25,7 +25,7 @@ SECRET_KEY = '=ipe9j_ct%@)n(dusodtjr(renk_4*oulrhll^krwlp3ulvw1p'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['singleornah.azurewebsites.net']
+ALLOWED_HOSTS = ['singleornah.azurewebsites.net', 'localhost']
 
 
 # Application definition

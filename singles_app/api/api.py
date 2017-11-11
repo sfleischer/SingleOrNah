@@ -10,6 +10,8 @@ from .match_keywords import get_weighted_sum
 from .detect_gender import gather_info_profile_pic, gather_info_post
 
 def api_entry(target_user, username, password):
+    if target_user is None or username is None or password is None:
+        return None
     user = User(target_user, username, password)
     u_dict = UsersDict()
 
