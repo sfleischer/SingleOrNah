@@ -1,162 +1,154 @@
 <!DOCTYPE html>
 
 <head>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
-    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Delicious">
-	<link rel="stylesheet" href="css/animations.css">
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Delicious">
 	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content = "IE=edge">
-	<meta name="viewport" content = "width = device-width, initial-scale = 1">
-
-
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-	<link rel="styleseet" href = "animate.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
 
 	<style>
-	.jumbotron{
-		padding-top: 150px;
-		text-align:center;
-		background-color: #F3F1F3;
-		color: #2B193E;
-		min-height: 100px;
+		.jumbotron {
+			padding-top: 150px;
+			text-align:center;
+			background-color: #F3F1F3;
+			color: #2B193E;
+			min-height: 100px;
 
-	}
+		}
 
-	.jumbotron .logo{
-		font-size: 50px;
-		font-family: 'Tahoma', serif;
-    	position: absolute;
-    	top: 20%;
-    	left: 50%;
-    	transform: translateX(-50%) translateY(-20%);
+		.jumbotron .logo {
+			font-size: 50px;
+			font-family: 'Tahoma', serif;
+			position: absolute;
+			top: 20%;
+			left: 50%;
+			transform: translateX(-50%) translateY(-20%);
+		}
 
-	}
+		.btn {
+			background-color: #4a09ba;
+			border-color: #2e017c;
+		}
 
-	.btn{
-		background-color: #4a09ba;
-		border-color: #2e017c;
-	}
+		.btn:hover {
+			background-color: #4b02ce;
+			border-color: #2e017c;
+			color: white;
+		}
 
-	.btn:hover {
-	    background-color: #4b02ce;
-	    border-color: #2e017c;
-	    color: white;
-	}
+		.btn:active {
+			background-color: #4CAF50;
+			color: white;
+		}
 
-	.btn:active {
-	    background-color: #4CAF50;
-	    color: white;
-	}
+		.btn:click {
+		background-color: #4CAF50;
+		color: white;
+		}
 
-	.btn:click {
-    background-color: #4CAF50;
-    color: white;
-	}
+		.tab-content{
+			border-left: 1px solid #ddd;
+			border-right: 1px solid #ddd;
+			border-bottom: 1px solid #ddd;
+			padding: 10px;
+		}
 
-	.tab-content{
-		border-left: 1px solid #ddd;
-		border-right: 1px solid #ddd;
-		border-bottom: 1px solid #ddd;
-		padding: 10px;
-	}
-	.navbar { 
-		background-color: #F3F1F3;
-		margin-bottom: 0;
-		text-align:center;
+		.navbar { 
+			background-color: #F3F1F3;
+			margin-bottom: 0;
+			text-align:center;
 
-		position: absolute;
-    	top: 40%;
-    	left: 50%;
-    	transform: translateX(-50%) translateY(-40%);
-	}
-	.item{
-		-webkit-animation-duration: 1s;
-		-webkit-animation-delay;
-	}
-	.input-group{
-		text-align: center;
-		border-color: #E7E7E7;
-	}
+			position: absolute;
+			top: 40%;
+			left: 50%;
+			transform: translateX(-50%) translateY(-40%);
+		}
 
-	.result{
-		background-color: #E7E7E7;
-		height: 600px;
-	}
-	.close{
-		padding:10px;
-	}
-	</style>
+		.item {
+			-webkit-animation-duration: 1s;
+			-webkit-animation-delay;
+		}
 
-	<style>
-		body{
+		.input-group {
+			text-align: center;
+			border-color: #E7E7E7;
+		}
+
+		.result {
+			background-color: #E7E7E7;
+			height: 600px;
+		}
+
+		.close {
+			padding:10px;
+		}
+
+		body {
 			background-color:#F3F1F3;
 		}
 	</style>
 
 	<title>Find Yo Hunny</title>
-	</head>
+</head>
 
 <body>
-<div class = "jumbotron jumbotron-fluid vertical-center">
-	<h1 class = "logo">
-		Single or Naw?
-	</h1>
-</div>
+	<div class = "jumbotron jumbotron-fluid vertical-center">
+		<h1 class = "logo">
+			Single or Naw?
+		</h1>
+	</div>
 
-    <nav class="navbar navbar-default">
-        <div class="nav nav-justified navbar-nav">
-            <form class="navbar-form navbar-search" role="search" id="searchform" method="get" accept-charset="utf-8">
-                <div class="input-group">
-                    <input class="form-control searchfield input-lg" type="text" id="searchbox" name="q" placeholder="Search">
+	<nav class="navbar navbar-default">
+		<div class="nav nav-justified navbar-nav">
+			<form class="navbar-form navbar-search" role="search" id="searchform" method="get" accept-charset="utf-8">
+				<div class="input-group">
+					<input class="form-control searchfield input-lg" type="text" id="searchbox" name="q" placeholder="Search">
 
-                    <div class="input-group-btn">
-                        <button class="searchbutton btn btn-search btn-info input-lg" type="submit">
-                        	<i class="fa fa-search"></i>
-                            <span class="glyphicon glyphicon-search"></span>
-                            <span class="label-icon">Search</span>
-                        </button>
-                    </div>
-                </div>  
-            </form>   
-         
-        </div>
-    </nav>
-    
+					<div class="input-group-btn">
+						<button class="searchbutton btn btn-search btn-info input-lg" type="submit">
+							<i class="fa fa-search"></i>
+							<span class="glyphicon glyphicon-search"></span>
+							<span class="label-icon">Search</span>
+						</button>
+					</div>
+				</div>  
+			</form>   
+		 
+		</div>
+	</nav>
+	
 <!-- <form id="searchform" action="{% url 'blog_search_list_view' %}" method="get" accept-charset="utf-8">
-      <button class="searchbutton" type="submit">
-        <i class="fa fa-search"></i>
-      </button>
-      <input class="searchfield" id="searchbox" name="q" type="text" placeholder="Search">
+	  <button class="searchbutton" type="submit">
+		<i class="fa fa-search"></i>
+	  </button>
+	  <input class="searchfield" id="searchbox" name="q" type="text" placeholder="Search">
 
-      class="btn searchbutton btn-search btn-info"
+	  class="btn searchbutton btn-search btn-info"
 </form> -->
 
-<script>
-$(document).ready(function(){
-    $("#hide").click(function(){
-        $("#object").hide();
-    });
-});
-</script>
 
-{% if search%}
-<div id="object" class="result w3-container w3-center w3-animate-bottom w3-animate-opacity"">
-<button type="button" class="close" id='hide' aria-label="Close">
-  	<span aria-hidden="true">&times;</span>
-</button>
- 
- test
- 2131
+	{% if search%}
+	<div id="object" class="result w3-container w3-center w3-animate-bottom w3-animate-opacity"">
+		<button type="button" class="close" id='hide' aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+		 
+		 test
+		 2131
 
- <div>321312</div>
- <p> asda<p>
- <h>1adsadas</h>
+		 <div>321312</div>
+		 <p> asda</p>
+		 <h3>1adsadas</h3>
 
+	 </div>
+	{% endif %}
 
- </div>
-{% endif %}
-
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script>
+	$(document).ready(function(){
+		$("#hide").click(function(){
+			$("#object").hide();
+		});
+	});
+	</script>
+</body>
