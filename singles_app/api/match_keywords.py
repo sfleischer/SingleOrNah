@@ -1,6 +1,5 @@
 import csv
 import requests
-from decouple import config
 from collections import defaultdict
 
 # takes in a list of (keywords,weight) and a target string
