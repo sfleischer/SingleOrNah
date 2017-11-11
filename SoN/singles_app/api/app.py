@@ -252,8 +252,6 @@ class InstagramScraper(object):
         if resp.status_code == 200:
             payload = json.loads(resp.text)['data'][entity_name]
 
-            print json.dumps(payload)
-
             if payload:
                 nodes = []
 
@@ -375,7 +373,6 @@ class InstagramScraper(object):
                 and '11906329_960233084022564_1448528159' not in user['profile_pic_url_hd']:
             item = {'urls': [re.sub(r'/[sp]\d{3,}x\d{3,}/', '/', user['profile_pic_url_hd'])],
                     'created_time': 1286323200}
-            print item
 
             if self.latest is False or os.path.isfile(dst + '/' + item['urls'][0].split('/')[-1]) is False:
                 for item in tqdm.tqdm([item], desc='Searching {0} for profile pic'.format(username), unit=" images",

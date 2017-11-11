@@ -15,7 +15,7 @@ def get_key_word_matches(target_string, keywords):
 def get_weighted_sum(target_string, keywords):
     sum = 0.0
     for weight, count in get_key_word_matches(target_string, keywords).items():
-        sum += weight * count
+        sum += weight * min(count,5)/5
     return sum
 
 if __name__ == "__main__":
