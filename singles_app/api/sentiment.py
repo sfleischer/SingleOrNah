@@ -2,8 +2,6 @@ import numpy as np
 import requests
 import json
 
-from decouple import config
-
 
 # queries azure sentiment api
 def get_sentiment(posts):
@@ -21,7 +19,7 @@ def get_sentiment(posts):
     url = 'https://eastus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment'
     headers = {
         'Content-Type': 'application/json',
-        'Ocp-Apim-Subscription-Key': config('AZURE_SENTIMENT_API_KEY')
+        'Ocp-Apim-Subscription-Key': '9da2b93062e44723aefba7df7e345820'
     }
 
     response = requests.post(url, data=str(posts).encode('utf-8'), headers=headers)

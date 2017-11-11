@@ -1,4 +1,3 @@
-from decouple import config
 import requests
 import csv
 import numpy as np
@@ -105,7 +104,7 @@ def get_top_three(u_dict):
     return tup_list[0:3]
 
 def load_keywords(): 
-    CSV_URL = config('KEYWORDS_URL')
+    CSV_URL = KEYWORDS_URL
 
     with requests.Session() as s:
         download = s.get(CSV_URL)
@@ -117,6 +116,9 @@ def load_keywords():
         for row in cr:
             l.append((row[0], float(row[1])))
     return l
+
+KEYWORDS_URL= 'https://gist.githubusercontent.com/chrisfischer/144191eae03e64dc9494a2967241673a/raw/afdbd000d78cf122448911a234521c9766ae849b/relationship_keywords.csv'
+
 
 if __name__ == "__main__":
     #user = api_entry("kpunkka", "singleornaw1154", "phacks")
