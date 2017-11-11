@@ -8,7 +8,7 @@ class User:
         """
         Initializer for the class
         """
-        cap = 30; #50 images is the upper limit
+        cap = 15; #50 images is the upper limit
         args = {'username': [user], 'media_types': ['none'], 'media_metadata': False, 'usernames': [user], 'verbose': 0, 'maximum': cap, 'login_user': username, 'login_only': False, 'destination': './', 'quiet': False, 'comments': True, 'filename': None, 'filter': None, 'search_location': False, 'tag': False, 'location': False, 'login_pass': password, 'retain_username': False, 'include_location': False, 'latest': False}
         scraper = app.start(args)
         scraper.scrape()

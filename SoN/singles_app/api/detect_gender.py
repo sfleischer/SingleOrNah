@@ -2,10 +2,11 @@
 # Adapted from Microsoft Azure Face API Quickstart Guide and Documentation.
 # Written by Derek Leung for Princeton Hacks fa2017.
 
-import httplib, urllib, base64, json
+import http.client, urllib.parse, base64, json
+import requests
 
 # Replace the subscription_key string value with your valid subscription key.
-subscription_key = 'dfbf8eff05414406a5e0d33268caa0f9'
+subscription_key = 'a3cda79eb6f741f98721564cb648c568'
 
 # You must use the same region in your REST API call as you used to obtain your subscription keys.
 # For example, if you obtained your subscription keys from the westus region, replace 
@@ -27,27 +28,27 @@ def gather_info_profile_pic (url):
     count = 0
 
     # Establish required parameters
-    params = urllib.urlencode({
-    'returnFaceId': 'false',
-    'returnFaceLandmarks': 'false',
-    'returnFaceAttributes': 'age,gender',
+    params = urllib.parse.urlencode({
+        'returnFaceId': 'false',
+        'returnFaceLandmarks': 'false',
+        'returnFaceAttributes': 'age,gender',
     })
 
     body = "{'url':" + "'" + url + "'}"
     try:
         # Execute the REST API call and get the response.
-        conn = httplib.HTTPSConnection('westcentralus.api.cognitive.microsoft.com')
+        conn = http.client.HTTPSConnection('westcentralus.api.cognitive.microsoft.com')
         conn.request("POST", "/face/v1.0/detect?%s" % params, body, headers)
         response = conn.getresponse()
         data = response.read()
 
         # 'data' contains the JSON data and parsed is the JSON in dictionary form
         parsed = json.loads(data)
-        my_json = json.dumps(parsed, sort_keys=True, indent=2)
         count = len(parsed)
 
         # Iterate through all individual's face attributes to aggregate information.
         print(count)
+        print(parsed)
         for x in range(0, count):
             agg_age += parsed[x]['faceAttributes']['age']
             if (parsed[x]['faceAttributes']['gender'] == 'male'):
@@ -62,36 +63,34 @@ def gather_info_profile_pic (url):
         # Figure out the average age of all individuals.
         ret_age = agg_age / count
 
-        #TODO: Return statement?
-        #print(my_json)
-        
         # Return (gender, age) for the target
         return [ret_gender, ret_age]
 
         conn.close()
     except Exception as e:
-        print("[Errno {0}] {1}".format(e.errno, e.strerror))
+        print("[Errno {0}] {1}".format(e))
 
 # Create json with the relevant data given a post image, poster's gender and age (we call this poster tgt).
 def gather_info_post (url, tgt_gender, tgt_age):
 
     # Relevant data for evaluating score.
+    num_same_gender = 0
     num_opp_gender = 0
     agg_happiness = 0
     agg_disgust = 0
     agg_smile = 0
 
     # Establish parameters
-    params = urllib.urlencode({
-    'returnFaceId': 'false',
-    'returnFaceLandmarks': 'false',
-    'returnFaceAttributes': 'age,gender,emotion,smile',
+    params = urllib.parse.urlencode({
+        'returnFaceId': 'false',
+        'returnFaceLandmarks': 'false',
+        'returnFaceAttributes': 'age,gender,emotion,smile',
     })
 
     body = "{'url':" + "'" + url + "'}"
     try:
         # Execute the REST API call and get the response.
-        conn = httplib.HTTPSConnection('westcentralus.api.cognitive.microsoft.com')
+        conn = http.client.HTTPSConnection('westcentralus.api.cognitive.microsoft.com')
         conn.request("POST", "/face/v1.0/detect?%s" % params, body, headers)
         response = conn.getresponse()
         data = response.read()
@@ -110,20 +109,20 @@ def gather_info_post (url, tgt_gender, tgt_age):
         # Iterate through all participants face attributes only counting those of opposite sex
         # and within +/- age_range with the target.
         count = len(parsed)
-        for x in range(0, count):
-            if (parsed[x]['faceAttributes']['gender'] != tgt_gender):
-                if (parsed[x]['faceAttributes']['age'] > tgt_age - age_range and
-                    parsed[x]['faceAttributes']['age'] < tgt_age + age_range):
-                        num_opp_gender += 1
-                        agg_happiness = parsed[x]['faceAttributes']['emotion']['happiness']
-                        agg_happiness = parsed[x]['faceAttributes']['emotion']['disgust']
-                        agg_smile = parsed[x]['faceAttributes']['smile']
+        print(count)
+        for x in range(count):
+            if parsed[x]['faceAttributes']['age'] > tgt_age - age_range and parsed[x]['faceAttributes']['age'] < tgt_age + age_range:
+                if (parsed[x]['faceAttributes']['gender'] != tgt_gender):
+                    num_opp_gender += 1
+                    agg_happiness = parsed[x]['faceAttributes']['emotion']['happiness']
+                    agg_happiness = parsed[x]['faceAttributes']['emotion']['disgust']
+                    agg_smile = parsed[x]['faceAttributes']['smile']
+                else:
+                    num_same_gender += 1
 
         # Return data for an insta post with num of opposing gender, aggregated happiness, aggregated
         # disgust, and aggregated smiles :)
-        return [num_opp_gender, agg_happiness, agg_disgust, agg_smile]
-        #print num_opp_gender
-        #print (my_json)
+        return [num_same_gender, num_opp_gender, agg_happiness, agg_disgust, agg_smile]
 
         conn.close()
     except Exception as e:

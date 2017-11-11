@@ -13,19 +13,19 @@ def api_entry(target_user, username, password):
     user = User(target_user, username, password)
     user_dict = UsersDict()
 
-    # Must first obtain profile pic, I'm guessing as a profile_pic_url?? (TODO)
-    profile_pic_data = gather_info_profile_pic('profile_pic_url')
-    
-    # User Gender holds the target's gender
-    user_gender = profile_pic_data[0]
+    profile_pic_url = user.getProfilePicture()
+    print(profile_pic_url)
 
-    # User age holds the target's age, defaulted to 0
-    user_age = profile_pic_data[1]
+    # Must first obtain profile pic, I'm guessing as a profile_pic_url?? (TODO)
+    [user_gender, user_age] = gather_info_profile_pic(profile_pic_url)
 
     comment_text = []
     comment_counter = 0
     caption_text = []
     caption_counter = 0
+
+    gender_smile = []
+
     for image in user.json:
         comments = image['comments']['data']
         for comment in comments:
@@ -40,7 +40,13 @@ def api_entry(target_user, username, password):
                 })
             comment_counter += 1
 
+        # handle image
         image_url = image['display_url']
+        [num_same_gender, num_opp_gender, agg_happiness, agg_disgust, agg_smile] = gather_info_post(image_url, user_gender, user_age)
+        sum = num_same_gender + num_opp_gender + agg_happiness + agg_disgust + agg_smile
+        happy_ratio = (agg_happiness + agg_smile) / sum
+        opp_to_same_gender_ratio = num_opp_gender / num_same_gender
+        gender_smile.append(opp_to_same_gender_ratio)
 
         # Run gather_info_post for each image that the user has posted
         post_data = gather_info_post (image_url, user_gender, user_age)
@@ -48,8 +54,6 @@ def api_entry(target_user, username, password):
         agg_happiness = post_data[1]
         agg_disgust = post_data[2]
         agg_smile = post_data[3]
-
-        # TODO: Use all this information to aggregate a score
 
         caption = image['edge_media_to_caption']['edges'][0]['node']['text']
         caption_text.append({
@@ -75,18 +79,25 @@ def api_entry(target_user, username, password):
     caption_sentiment = get_sentiment({ 'documents': caption_text })
     if (caption_sentiment):
         caption_sentiment_list = list(caption_sentiment.values())
-        print(caption_sentiment_list)
         average_caption_sentiment = np.mean(caption_sentiment_list)
 
     # run keyword search on captions
     cummulative_keyword_sum = 0.0
     for d in caption_text:
         cummulative_keyword_sum += get_weighted_sum(d['text'], keywords)
+    
+    average_gender_smile = np.mean(gender_smile)
+
+    print (average_gender_smile)
     '''
     print(user_dict.users)
     print(average_caption_sentiment)
     print(cummulative_keyword_sum)
     '''
+    return {
+        'p': 1,
+        'most_likely': 1
+    }
 
 
 def load_keywords(): 
@@ -105,4 +116,5 @@ def load_keywords():
     return l
 
 if __name__ == "__main__":
+    #user = api_entry("0lonestar", "wae3wae3", "phacks")
     user = api_entry("0lonestar", "chrisdfisch", "JAVAwet3652")
