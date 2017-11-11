@@ -1,5 +1,5 @@
 import os
-import app
+from . import app
 import json
 
 class User:

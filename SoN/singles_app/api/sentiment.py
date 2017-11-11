@@ -25,7 +25,7 @@ def get_sentiment(posts):
     }
 
     response = requests.post(url, data=str(posts).encode('utf-8'), headers=headers)
-    
+    print(response.json())
     try: 
         toReturn = {}
         for d in response.json()['documents']:

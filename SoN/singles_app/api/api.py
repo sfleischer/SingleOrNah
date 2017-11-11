@@ -3,11 +3,11 @@ import requests
 import csv
 import numpy as np
 
-from user import User
-from users_dict import UsersDict
-from sentiment import get_sentiment
-from match_keywords import get_weighted_sum
-from detect_gender import gather_info_profile_pic, gather_info_post
+from .user import User
+from .users_dict import UsersDict
+from .sentiment import get_sentiment
+from .match_keywords import get_weighted_sum
+from .detect_gender import gather_info_profile_pic, gather_info_post
 
 def api_entry(target_user, username, password):
     user = User(target_user, username, password)
@@ -56,7 +56,7 @@ def api_entry(target_user, username, password):
             'text': caption
             })
         caption_counter += 1
-
+    print(comment_text)
     # obtain comment sentiments
     comment_sentiment = get_sentiment({ 'documents': comment_text })
     if (comment_sentiment):
@@ -71,6 +71,7 @@ def api_entry(target_user, username, password):
 
     # run sentiment analysis on captions
     caption_sentiment = get_sentiment({ 'documents': caption_text })
+    average_caption_sentiment = 0.0
     if (caption_sentiment):
         caption_sentiment_list = list(caption_sentiment.values())
         average_caption_sentiment = np.mean(caption_sentiment_list)
