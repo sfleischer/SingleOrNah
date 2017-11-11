@@ -38,5 +38,4 @@ if __name__ == "__main__":
     for image in user.json:
         comments = image['comments']['data']
         print (image['edge_media_to_caption']['edges'][0]['node']['text'])
-        return self.json is None
 
