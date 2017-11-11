@@ -20,7 +20,7 @@ import concurrent.futures
 import requests
 import tqdm
 
-from constants import *
+from .constants import *
 
 try:
     reload(sys)  # Python 2.7
