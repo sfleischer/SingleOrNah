@@ -41,5 +41,11 @@ class User:
         
 
 
-user = User("jhuanghuang", "puss_dragon8", "Frond1ons")
-print user.getImages()
+def api_entry(target_user, username, password):
+    user = User(target_user, username, password)
+    user_dict = UserDict()
+
+
+if __name__ == '__main__':
+    user = User("jhuanghuang", "puss_dragon8", "Frond1ons")
+    print (user.getImages())
