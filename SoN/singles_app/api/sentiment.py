@@ -10,11 +10,11 @@ def get_sentiment(posts):
     
     '''
     posts:
-        {
+        [{
             language: 'en',
             id: some unique id,
             text: text to be analyzed
-        }
+        }]
 
     '''
 
@@ -24,8 +24,8 @@ def get_sentiment(posts):
         'Ocp-Apim-Subscription-Key': config('AZURE_SENTIMENT_API_KEY')
     }
 
-    response = requests.post(url, data=str(posts), headers=headers)
-
+    response = requests.post(url, data=str(posts).encode('utf-8'), headers=headers)
+    
     try: 
         toReturn = {}
         for d in response.json()['documents']:

@@ -4,9 +4,6 @@
 
 import httplib, urllib, base64, json
 
-# Global constant for relevant age range (don't want to include people that are too old/young)
-age_range = 10
-
 # Replace the subscription_key string value with your valid subscription key.
 subscription_key = 'dfbf8eff05414406a5e0d33268caa0f9'
 
@@ -66,8 +63,11 @@ def gather_info_profile_pic (url):
         ret_age = agg_age / count
 
         #TODO: Return statement?
-        print(my_json)
+        #print(my_json)
         
+        # Return (gender, age) for the target
+        return [ret_gender, ret_age]
+
         conn.close()
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
@@ -75,8 +75,11 @@ def gather_info_profile_pic (url):
 # Create json with the relevant data given a post image, poster's gender and age (we call this poster tgt).
 def gather_info_post (url, tgt_gender, tgt_age):
 
-
+    # Relevant data for evaluating score.
     num_opp_gender = 0
+    agg_happiness = 0
+    agg_disgust = 0
+    agg_smile = 0
 
     # Establish parameters
     params = urllib.urlencode({
@@ -97,16 +100,31 @@ def gather_info_post (url, tgt_gender, tgt_age):
         parsed = json.loads(data)
         my_json = json.dumps(parsed, sort_keys=True, indent=2)
 
+        # Constant for relevant age range (don't want to include people that are too old/young)
+        age_range = 10
+
+        # Handle edge case where tgt_age is 0, increase the range to 100
+        if (tgt_age == 0):
+            age_range = 100
+
         # Iterate through all participants face attributes only counting those of opposite sex
-        # and within +- age_range with the target.
+        # and within +/- age_range with the target.
         count = len(parsed)
         for x in range(0, count):
             if (parsed[x]['faceAttributes']['gender'] != tgt_gender):
                 if (parsed[x]['faceAttributes']['age'] > tgt_age - age_range and
                     parsed[x]['faceAttributes']['age'] < tgt_age + age_range):
                         num_opp_gender += 1
+                        agg_happiness = parsed[x]['faceAttributes']['emotion']['happiness']
+                        agg_happiness = parsed[x]['faceAttributes']['emotion']['disgust']
+                        agg_smile = parsed[x]['faceAttributes']['smile']
 
-        print num_opp_gender
+        # Return data for an insta post with num of opposing gender, aggregated happiness, aggregated
+        # disgust, and aggregated smiles :)
+        return [num_opp_gender, agg_happiness, agg_disgust, agg_smile]
+        #print num_opp_gender
+        #print (my_json)
+
         conn.close()
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))

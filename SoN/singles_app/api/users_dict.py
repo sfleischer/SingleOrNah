@@ -12,8 +12,14 @@ class UsersDict:
             self.users[handle][field] = incrBy
 
     def append_user_field_with(self, handle, field, item):
-        self.users[handle][field].append(item)
+        if not handle in self.users:
+            self.users[handle] = {}
 
+        if field in self.users[handle]:
+            self.users[handle][field].append(item)
+        else:
+            self.users[handle][field] = [item]
+            
     def get_user_dict(self, handle):
         return self.users[handle]
 

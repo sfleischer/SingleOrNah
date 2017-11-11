@@ -1,51 +1,108 @@
-import os
+from decouple import config
+import requests
+import csv
+import numpy as np
 
-
-class User:
-
-    def __init__(self, user, username, password):
-        """
-        Initializer for the class
-        """
-        cap = 50; #50 images is the upper limit
-        inputs = {"user" : user, "capacity" : cap, "username" : username, "password" : password}
-        command = "instagram-scraper {user} -m {capacity} -t image --media-metadata -u {username} -p {password}".format(**inputs)
-        os.system(command)
-        self.dir_path = os.path.dirname(os.path.realpath(__file__))
-        self.dest_path = self.dir_path + "/" + user
-
-
-    def isValidUser(self):
-        """Returns true if the user exsists"""
-        return os.path.isdir(self.dest_path)
-
-
-    def getImages(self):
-        """
-        Queries the images from instagram and puts it in api/{user}.
-        Function returns a list of image locations
-        """
-        cap = 50; #50 images is the upper limit
-        files = os.listdir(self.dest_path) # returns list
-        files = [self.dest_path + "/" + x for x in files if x.endswith(".jpg")]
-        return files
-
-
-    def getProfilePicture(self):
-        """
-        Queries the images from instagram and puts it in api/{user}.
-        Function returns a list of image locations
-        """
-
-    def getComments(self):
-        
-
+from user import User
+from users_dict import UsersDict
+from sentiment import get_sentiment
+from match_keywords import get_weighted_sum
+from detect_gender import gather_info_profile_pic, gather_info_post
 
 def api_entry(target_user, username, password):
     user = User(target_user, username, password)
-    user_dict = UserDict()
+    user_dict = UsersDict()
+
+    # Must first obtain profile pic, I'm guessing as a profile_pic_url?? (TODO)
+    profile_pic_data = gather_info_profile_pic('profile_pic_url')
+    
+    # User Gender holds the target's gender
+    user_gender = profile_pic_data[0]
+
+    # User age holds the target's age, defaulted to 0
+    user_age = profile_pic_data[1]
+
+    comment_text = []
+    comment_counter = 0
+    caption_text = []
+    caption_counter = 0
+    for image in user.json:
+        comments = image['comments']['data']
+        for comment in comments:
+            username = comment['owner']['username']
+            if username == target_user:
+                continue
+            user_dict.incr_user_field_by(username, 'num_comments', 1)
+            comment_text.append({
+                'language': 'en',
+                'id': username + ' ' + str(comment_counter),
+                'text': comment['text']
+                })
+            comment_counter += 1
+
+        image_url = image['display_url']
+
+        # Run gather_info_post for each image that the user has posted
+        post_data = gather_info_post (image_url, user_gender, user_age)
+        num_opp_gender = post_data[0]
+        agg_happiness = post_data[1]
+        agg_disgust = post_data[2]
+        agg_smile = post_data[3]
+
+        # TODO: Use all this information to aggregate a score
+
+        caption = image['edge_media_to_caption']['edges'][0]['node']['text']
+        caption_text.append({
+            'language': 'en',
+            'id': target_user + ' ' + str(caption_counter),
+            'text': caption
+            })
+        caption_counter += 1
+
+    # obtain comment sentiments
+    comment_sentiment = get_sentiment({ 'documents': comment_text })
+    if (comment_sentiment):
+        for k, v in comment_sentiment.items():
+            user_dict.append_user_field_with(k.split(' ')[0], 'comment_sentiment', v)
+
+    # obtains comment keyword sums
+    keywords = load_keywords()
+    for d in comment_text:
+        comment_keyword_sum = get_weighted_sum(d['text'], keywords)
+        user_dict.append_user_field_with(d['id'].split(' ')[0], 'comment_keyword_sum', comment_keyword_sum)
+
+    # run sentiment analysis on captions
+    caption_sentiment = get_sentiment({ 'documents': caption_text })
+    if (caption_sentiment):
+        caption_sentiment_list = list(caption_sentiment.values())
+        print(caption_sentiment_list)
+        average_caption_sentiment = np.mean(caption_sentiment_list)
+
+    # run keyword search on captions
+    cummulative_keyword_sum = 0.0
+    for d in caption_text:
+        cummulative_keyword_sum += get_weighted_sum(d['text'], keywords)
+    '''
+    print(user_dict.users)
+    print(average_caption_sentiment)
+    print(cummulative_keyword_sum)
+    '''
 
 
-if __name__ == '__main__':
-    user = User("jhuanghuang", "puss_dragon8", "Frond1ons")
-    print (user.getImages())
+def load_keywords(): 
+    CSV_URL = config('KEYWORDS_URL')
+
+    with requests.Session() as s:
+        download = s.get(CSV_URL)
+
+        decoded_content = download.content.decode('utf-8')
+
+        cr = csv.reader(decoded_content.splitlines(), delimiter=',')
+        l = []
+        for row in cr:
+            l.append((row[0], float(row[1])))
+
+    return l
+
+if __name__ == "__main__":
+    user = api_entry("0lonestar", "chrisdfisch", "JAVAwet3652")
