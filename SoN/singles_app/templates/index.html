@@ -128,19 +128,31 @@
 
 
 	{% if search%}
-	<div id="object" class="result w3-container w3-center w3-animate-bottom w3-animate-opacity"">
-		<button type="button" class="close" id='hide' aria-label="Close">
-			<span aria-hidden="true">&times;</span>
-		</button>
-		 
-		 test
-		 2131
+		<div id="object" class="result container w3-container w3-center w3-animate-bottom w3-animate-opacity"">
 
-		 <div>321312</div>
-		 <p> asda</p>
-		 <h3>1adsadas</h3>
+		<button type="button" class="close" id='hide' aria-label="Close">
+		  	<span aria-hidden="true">&times;</span>
+		</button>
+
+		<div class = "row results">
+			<div class = "col-sm-3 profile">
+				<img src={{profile}} height = 180 width = 180>
+			</div>
+		
+			<div class = "col-sm-3 profile">
+				<svg height="300" width="300">
+	  				<circle cx=120 cy="120" r="100" stroke="black" stroke-width="3" fill="red" />  
+				</svg> 
+			</div>
+
+			<div class = "col-sm-3 profile">
+				<img src={{profile}} height = 180
+				width = 180>
+			</div>
+		</div>
 
 	 </div>
+
 	{% endif %}
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -151,4 +163,5 @@
 		});
 	});
 	</script>
+
 </body>
