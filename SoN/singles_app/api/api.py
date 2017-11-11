@@ -11,12 +11,11 @@ from detect_gender import gather_info_profile_pic, gather_info_post
 
 def api_entry(target_user, username, password):
     user = User(target_user, username, password)
-    user_dict = UsersDict()
+    u_dict = UsersDict()
 
     profile_pic_url = user.getProfilePicture()
     print(profile_pic_url)
 
-    # Must first obtain profile pic, I'm guessing as a profile_pic_url?? (TODO)
     [user_gender, user_age] = gather_info_profile_pic(profile_pic_url)
 
     comment_text = []
@@ -32,7 +31,7 @@ def api_entry(target_user, username, password):
             username = comment['owner']['username']
             if username == target_user:
                 continue
-            user_dict.incr_user_field_by(username, 'num_comments', 1)
+            u_dict.incr_user_field_by(username, 'num_comments', 1)
             comment_text.append({
                 'language': 'en',
                 'id': username + ' ' + str(comment_counter),
@@ -42,18 +41,13 @@ def api_entry(target_user, username, password):
 
         # handle image
         image_url = image['display_url']
-        [num_same_gender, num_opp_gender, agg_happiness, agg_disgust, agg_smile] = gather_info_post(image_url, user_gender, user_age)
-        sum = num_same_gender + num_opp_gender + agg_happiness + agg_disgust + agg_smile
-        happy_ratio = (agg_happiness + agg_smile) / sum
-        opp_to_same_gender_ratio = num_opp_gender / num_same_gender
-        gender_smile.append(opp_to_same_gender_ratio)
-
-        # Run gather_info_post for each image that the user has posted
-        post_data = gather_info_post (image_url, user_gender, user_age)
-        num_opp_gender = post_data[0]
-        agg_happiness = post_data[1]
-        agg_disgust = post_data[2]
-        agg_smile = post_data[3]
+        post_data = gather_info_post(image_url, user_gender, user_age)
+        if post_data:
+            [num_same_gender, num_opp_gender, agg_happiness, agg_disgust, agg_smile] = post_data
+            sum = num_same_gender + num_opp_gender + agg_happiness + agg_disgust + agg_smile
+            happy_ratio = (agg_happiness + agg_smile) / sum
+            opp_gender_ratio = num_opp_gender / sum
+            gender_smile.append(opp_gender_ratio + happy_ratio)
 
         caption = image['edge_media_to_caption']['edges'][0]['node']['text']
         caption_text.append({
@@ -67,13 +61,13 @@ def api_entry(target_user, username, password):
     comment_sentiment = get_sentiment({ 'documents': comment_text })
     if (comment_sentiment):
         for k, v in comment_sentiment.items():
-            user_dict.append_user_field_with(k.split(' ')[0], 'comment_sentiment', v)
+            u_dict.append_user_field_with(k.split(' ')[0], 'comment_sentiment', v)
 
     # obtains comment keyword sums
     keywords = load_keywords()
     for d in comment_text:
         comment_keyword_sum = get_weighted_sum(d['text'], keywords)
-        user_dict.append_user_field_with(d['id'].split(' ')[0], 'comment_keyword_sum', comment_keyword_sum)
+        u_dict.append_user_field_with(d['id'].split(' ')[0], 'comment_keyword_sum', comment_keyword_sum)
 
     # run sentiment analysis on captions
     caption_sentiment = get_sentiment({ 'documents': caption_text })
@@ -88,17 +82,24 @@ def api_entry(target_user, username, password):
     
     average_gender_smile = np.mean(gender_smile)
 
-    print (average_gender_smile)
-    '''
-    print(user_dict.users)
-    print(average_caption_sentiment)
-    print(cummulative_keyword_sum)
-    '''
+    top_three = get_top_three(u_dict)
+     
+    p = ((average_gender_smile*0.6) + \
+    (average_caption_sentiment*0.2) + \
+    (cummulative_keyword_sum*2) + \
+    np.mean(list(comment_sentiment.values())) * 0.2) + \
+    np.mean([np.mean(v['comment_keyword_sum']) for k,v in u_dict.users.items()]) * 5
+
     return {
-        'p': 1,
-        'most_likely': 1
+        'p': p,
+        'top_three': top_three
     }
 
+
+def get_top_three(u_dict):
+    tup_list = list(u_dict.users.items())
+    tup_list.sort(key=lambda tup: tup[1]['num_comments']*np.mean(tup[1]['comment_sentiment']), reverse=True)
+    return tup_list[0:3]
 
 def load_keywords(): 
     CSV_URL = config('KEYWORDS_URL')
@@ -112,9 +113,9 @@ def load_keywords():
         l = []
         for row in cr:
             l.append((row[0], float(row[1])))
-
     return l
 
 if __name__ == "__main__":
-    #user = api_entry("0lonestar", "wae3wae3", "phacks")
-    user = api_entry("0lonestar", "chrisdfisch", "JAVAwet3652")
+    #user = api_entry("kpunkka", "singleornaw1154", "phacks")
+    #user = api_entry("kpunkka", "chrisdfisch", "")
+    user = api_entry("nadinevm", "wae3wae3", "phacks")

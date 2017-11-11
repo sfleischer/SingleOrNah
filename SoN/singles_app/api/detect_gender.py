@@ -35,23 +35,26 @@ def gather_info_profile_pic (url):
     }
 
     body = {'url': url}
+    
+    # Execute the REST API call and get the response.
+    response = requests.request('POST', uri_base + '/face/v1.0/detect', json=body, data=None, headers=headers, params=params)
+    parsed = json.loads(response.text)
+
+    '''
+    conn = http.client.HTTPSConnection('westcentralus.api.cognitive.microsoft.com')
+    conn.request("POST", "/face/v1.0/detect?%s" % params, body, headers)
+    response = conn.getresponse()
+    data = response.read()
+
+    # 'data' contains the JSON data and parsed is the JSON in dictionary form
+    parsed = json.loads(data)
+    '''
+    count = len(parsed)
+    if count == 0:
+         return ['female', 0]
+    
+    #print (parsed)
     try:
-        # Execute the REST API call and get the response.
-        response = requests.request('POST', uri_base + '/face/v1.0/detect', json=body, data=None, headers=headers, params=params)
-        parsed = json.loads(response.text)
-
-        '''
-        conn = http.client.HTTPSConnection('westcentralus.api.cognitive.microsoft.com')
-        conn.request("POST", "/face/v1.0/detect?%s" % params, body, headers)
-        response = conn.getresponse()
-        data = response.read()
-
-        # 'data' contains the JSON data and parsed is the JSON in dictionary form
-        parsed = json.loads(data)
-        '''
-        count = len(parsed)
-        print (parsed)
-
         # Iterate through all individual's face attributes to aggregate information.
         for x in range(count):
             agg_age += parsed[x]['faceAttributes']['age']
@@ -76,7 +79,7 @@ def gather_info_profile_pic (url):
 
         conn.close()
     except Exception as e:
-        print("[Errno {0}] {1}".format(e.errno, e.strerror))
+        return None
 
 # Create json with the relevant data given a post image, poster's gender and age (we call this poster tgt).
 def gather_info_post (url, tgt_gender, tgt_age):
@@ -96,28 +99,28 @@ def gather_info_post (url, tgt_gender, tgt_age):
     }
 
     body = {'url': url}
+    
+    # Execute the REST API call and get the response.
+    response = requests.request('POST', uri_base + '/face/v1.0/detect', json=body, data=None, headers=headers, params=params)
+    parsed = json.loads(response.text)
+
+    '''
+    conn = http.client.HTTPSConnection('westcentralus.api.cognitive.microsoft.com')
+    conn.request("POST", "/face/v1.0/detect?%s" % params, body, headers)
+    response = conn.getresponse()
+    data = response.read()
+
+    # 'data' contains the JSON data and parsed is the JSON in dictionary form
+    '''
+    count = len(parsed)
+    #print(parsed)
+    # Constant for relevant age range (don't want to include people that are too old/young)
+    age_range = 10
+
+    # Handle edge case where tgt_age is 0, increase the range to 100
+    if (tgt_age == 0):
+        age_range = 100
     try:
-        # Execute the REST API call and get the response.
-        response = requests.request('POST', uri_base + '/face/v1.0/detect', json=body, data=None, headers=headers, params=params)
-        parsed = json.loads(response.text)
-
-        '''
-        conn = http.client.HTTPSConnection('westcentralus.api.cognitive.microsoft.com')
-        conn.request("POST", "/face/v1.0/detect?%s" % params, body, headers)
-        response = conn.getresponse()
-        data = response.read()
-
-        # 'data' contains the JSON data and parsed is the JSON in dictionary form
-        '''
-        count = len(parsed)
-        
-        # Constant for relevant age range (don't want to include people that are too old/young)
-        age_range = 10
-
-        # Handle edge case where tgt_age is 0, increase the range to 100
-        if (tgt_age == 0):
-            age_range = 100
-
         # Iterate through all participants face attributes only counting those of opposite sex
         # and within +/- age_range with the target.
         for x in range(count):
@@ -136,15 +139,21 @@ def gather_info_post (url, tgt_gender, tgt_age):
             avg_happiness = agg_happiness / count
             avg_disgust = agg_disgust / count
             avg_smile = agg_smile / count
+        else:
+            return None
 
         ans = [num_same_gender, num_opp_gender, avg_happiness, avg_disgust, avg_smile]
         return ans
 
         conn.close()
     except Exception as e:
-        print("[Errno {0}] {1}".format(e.errno, e.strerror))
+        return None
 
-#gather_info_post('http://hinewyork.org/wp-content/uploads/2012/10/shutterstock_20253523.jpg', 'male', 10)
-gather_info_post('http://www.webberenergygroup.com/wpnew/wp-content/uploads/green-1040x325.jpg', 'male', 32)
-#('http://www.webberenergygroup.com/wpnew/wp-content/uploads/green-1040x325.jpg', 'female', 32.7)
-#gather_info_profile_pic('http://www.stefantell.se/blog/wp-content/uploads/2013/12/lighting-groups-of-two-people-with-one-light.jpg')
+
+if __name__ == '__main__':
+    #gather_info_post('http://hinewyork.org/wp-content/uploads/2012/10/shutterstock_20253523.jpg', 'male', 10)
+    #print (gather_info_post('http://www.webberenergygroup.com/wpnew/wp-content/uploads/green-1040x325.jpg', 'male', 32))
+    print (gather_info_post('https://scontent-lga3-1.cdninstagram.com/t51.2885-19/s320x320/21294866_1955669654672329_2281362812317990912_n.jpg', 'male', 32))
+    
+    #('http://www.webberenergygroup.com/wpnew/wp-content/uploads/green-1040x325.jpg', 'female', 32.7)
+    #gather_info_profile_pic('http://www.stefantell.se/blog/wp-content/uploads/2013/12/lighting-groups-of-two-people-with-one-light.jpg')
