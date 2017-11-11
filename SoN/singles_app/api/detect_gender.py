@@ -2,7 +2,7 @@
 # Adapted from Microsoft Azure Face API Quickstart Guide and Documentation.
 # Written by Derek Leung for Princeton Hacks fa2017.
 
-import httplib, urllib, base64, json
+import http.client, urllib, base64, json, requests
 #import requests
 
 # Replace the subscription_key string value with your valid subscription key.
@@ -11,7 +11,7 @@ subscription_key = 'dfbf8eff05414406a5e0d33268caa0f9'
 # You must use the same region in your REST API call as you used to obtain your subscription keys.
 # For example, if you obtained your subscription keys from the westus region, replace 
 # "westcentralus" in the URI below with "westus".
-uri_base = 'westcentralus.api.cognitive.microsoft.com'
+uri_base = 'https://westcentralus.api.cognitive.microsoft.com'
 
 # Request headers.
 headers = {
@@ -28,26 +28,32 @@ def gather_info_profile_pic (url):
     count = 0
 
     # Establish required parameters
-    params = urllib.urlencode({
+    params = {
         'returnFaceId': 'false',
         'returnFaceLandmarks': 'false',
         'returnFaceAttributes': 'age,gender',
-    })
+    }
 
-    body = "{'url':" + "'" + url + "'}"
+    body = {'url': url}
     try:
         # Execute the REST API call and get the response.
-        conn = httplib.HTTPSConnection('westcentralus.api.cognitive.microsoft.com')
+        response = requests.request('POST', uri_base + '/face/v1.0/detect', json=body, data=None, headers=headers, params=params)
+        parsed = json.loads(response.text)
+
+        '''
+        conn = http.client.HTTPSConnection('westcentralus.api.cognitive.microsoft.com')
         conn.request("POST", "/face/v1.0/detect?%s" % params, body, headers)
         response = conn.getresponse()
         data = response.read()
 
         # 'data' contains the JSON data and parsed is the JSON in dictionary form
         parsed = json.loads(data)
+        '''
         count = len(parsed)
+        print (parsed)
 
         # Iterate through all individual's face attributes to aggregate information.
-        for x in range(0, count):
+        for x in range(count):
             agg_age += parsed[x]['faceAttributes']['age']
             if (parsed[x]['faceAttributes']['gender'] == 'male'):
                 num_males += 1
@@ -65,11 +71,12 @@ def gather_info_profile_pic (url):
             ret_age = agg_age / count
 
         # Return (gender, age) for the target
-        return [ret_gender, ret_age]
+        ans = [ret_gender, ret_age]
+        return ans
 
         conn.close()
     except Exception as e:
-        print("[Errno {0}] {1}".format(e))
+        print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
 # Create json with the relevant data given a post image, poster's gender and age (we call this poster tgt).
 def gather_info_post (url, tgt_gender, tgt_age):
@@ -82,22 +89,26 @@ def gather_info_post (url, tgt_gender, tgt_age):
     agg_smile = 0
 
     # Establish parameters
-    params = urllib.urlencode({
+    params = {
         'returnFaceId': 'false',
         'returnFaceLandmarks': 'false',
         'returnFaceAttributes': 'age,gender,emotion,smile',
-    })
+    }
 
-    body = "{'url':" + "'" + url + "'}"
+    body = {'url': url}
     try:
         # Execute the REST API call and get the response.
-        conn = httplib.HTTPSConnection('westcentralus.api.cognitive.microsoft.com')
+        response = requests.request('POST', uri_base + '/face/v1.0/detect', json=body, data=None, headers=headers, params=params)
+        parsed = json.loads(response.text)
+
+        '''
+        conn = http.client.HTTPSConnection('westcentralus.api.cognitive.microsoft.com')
         conn.request("POST", "/face/v1.0/detect?%s" % params, body, headers)
         response = conn.getresponse()
         data = response.read()
 
         # 'data' contains the JSON data and parsed is the JSON in dictionary form
-        parsed = json.loads(data)
+        '''
         count = len(parsed)
         
         # Constant for relevant age range (don't want to include people that are too old/young)
@@ -113,21 +124,27 @@ def gather_info_post (url, tgt_gender, tgt_age):
             if parsed[x]['faceAttributes']['age'] > tgt_age - age_range and parsed[x]['faceAttributes']['age'] < tgt_age + age_range:
                 if (parsed[x]['faceAttributes']['gender'] != tgt_gender):
                     num_opp_gender += 1
-                    agg_happiness += parsed[x]['faceAttributes']['emotion']['happiness']
-                    agg_happiness += parsed[x]['faceAttributes']['emotion']['disgust']
-                    agg_smile += parsed[x]['faceAttributes']['smile']
                 else:
                     num_same_gender += 1
+            agg_happiness += parsed[x]['faceAttributes']['emotion']['happiness']
+            agg_happiness += parsed[x]['faceAttributes']['emotion']['disgust']
+            agg_smile += parsed[x]['faceAttributes']['smile']
 
         # Return data for an insta post with num of opposing gender, aggregated happiness, aggregated
-        # disgust, and aggregated smiles :)
-        return [num_same_gender, num_opp_gender, agg_happiness, agg_disgust, agg_smile]
+        # disgust, and aggregated smiles
+        if (count != 0):
+            avg_happiness = agg_happiness / count
+            avg_disgust = agg_disgust / count
+            avg_smile = agg_smile / count
+
+        ans = [num_same_gender, num_opp_gender, avg_happiness, avg_disgust, avg_smile]
+        return ans
 
         conn.close()
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
 #gather_info_post('http://hinewyork.org/wp-content/uploads/2012/10/shutterstock_20253523.jpg', 'male', 10)
-#gather_info_profile_pic('http://www.webberenergygroup.com/wpnew/wp-content/uploads/green-1040x325.jpg')
-gather_info_post('http://www.webberenergygroup.com/wpnew/wp-content/uploads/green-1040x325.jpg', 'female', 32.7)
+gather_info_post('http://www.webberenergygroup.com/wpnew/wp-content/uploads/green-1040x325.jpg', 'male', 32)
+#('http://www.webberenergygroup.com/wpnew/wp-content/uploads/green-1040x325.jpg', 'female', 32.7)
 #gather_info_profile_pic('http://www.stefantell.se/blog/wp-content/uploads/2013/12/lighting-groups-of-two-people-with-one-light.jpg')
