@@ -7,10 +7,20 @@ from user import User
 from users_dict import UsersDict
 from sentiment import get_sentiment
 from match_keywords import get_weighted_sum
+from detect_gender import gather_info_profile_pic, gather_info_post
 
 def api_entry(target_user, username, password):
     user = User(target_user, username, password)
     user_dict = UsersDict()
+
+    # Must first obtain profile pic, I'm guessing as a profile_pic_url?? (TODO)
+    profile_pic_data = gather_info_profile_pic('profile_pic_url')
+    
+    # User Gender holds the target's gender
+    user_gender = profile_pic_data[0]
+
+    # User age holds the target's age, defaulted to 0
+    user_age = profile_pic_data[1]
 
     comment_text = []
     comment_counter = 0
@@ -31,6 +41,16 @@ def api_entry(target_user, username, password):
             comment_counter += 1
 
         image_url = image['display_url']
+
+        # Run gather_info_post for each image that the user has posted
+        post_data = gather_info_post (image_url, user_gender, user_age)
+        num_opp_gender = post_data[0]
+        agg_happiness = post_data[1]
+        agg_disgust = post_data[2]
+        agg_smile = post_data[3]
+
+        # TODO: Use all this information to aggregate a score
+
         caption = image['edge_media_to_caption']['edges'][0]['node']['text']
         caption_text.append({
             'language': 'en',
@@ -39,8 +59,7 @@ def api_entry(target_user, username, password):
             })
         caption_counter += 1
 
-
-    # obtaim comment sentiments
+    # obtain comment sentiments
     comment_sentiment = get_sentiment({ 'documents': comment_text })
     if (comment_sentiment):
         for k, v in comment_sentiment.items():

@@ -4,6 +4,9 @@
 
 import httplib, urllib, base64, json
 
+# Global constant for relevant age range (don't want to include people that are too old/young)
+age_range = 10
+
 # Replace the subscription_key string value with your valid subscription key.
 subscription_key = 'dfbf8eff05414406a5e0d33268caa0f9'
 
@@ -64,9 +67,6 @@ def gather_info_profile_pic (url):
 
         #TODO: Return statement?
         #print(my_json)
-        
-        # Return (gender, age) for the target
-        return [ret_gender, ret_age]
 
         conn.close()
     except Exception as e:
@@ -100,13 +100,6 @@ def gather_info_post (url, tgt_gender, tgt_age):
         parsed = json.loads(data)
         my_json = json.dumps(parsed, sort_keys=True, indent=2)
 
-        # Constant for relevant age range (don't want to include people that are too old/young)
-        age_range = 10
-
-        # Handle edge case where tgt_age is 0, increase the range to 100
-        if (tgt_age == 0):
-            age_range = 100
-
         # Iterate through all participants face attributes only counting those of opposite sex
         # and within +/- age_range with the target.
         count = len(parsed)
@@ -119,11 +112,8 @@ def gather_info_post (url, tgt_gender, tgt_age):
                         agg_happiness = parsed[x]['faceAttributes']['emotion']['disgust']
                         agg_smile = parsed[x]['faceAttributes']['smile']
 
-        # Return data for an insta post with num of opposing gender, aggregated happiness, aggregated
-        # disgust, and aggregated smiles :)
-        return [num_opp_gender, agg_happiness, agg_disgust, agg_smile]
-        #print num_opp_gender
-        #print (my_json)
+        print num_opp_gender
+        print (my_json)
 
         conn.close()
     except Exception as e:
