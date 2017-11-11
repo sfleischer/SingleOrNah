@@ -8,10 +8,10 @@ from django.shortcuts import render
 def index(request):
 	search = request.GET.get('q')
 
-	profile = "https://images-na.ssl-images-amazon.com/images/M/MV5BMTQ5Nzg2MTgwMl5BMl5BanBnXkFtZTcwNTA0NjcxMw@@._V1_UY317_CR0,0,214,317_AL_.jpg"
+	#profile = "https://images-na.ssl-images-amazon.com/images/M/MV5BMTQ5Nzg2MTgwMl5BMl5BanBnXkFtZTcwNTA0NjcxMw@@._V1_UY317_CR0,0,214,317_AL_.jpg"
 	context = {
-		'search' : search,
-		'profile': profile
+		'search' : search
+		#'profile': profile
 	}
 	return render(request, 'index.html', context)
 

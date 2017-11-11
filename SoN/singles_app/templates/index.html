@@ -7,6 +7,12 @@
 
 
 	<style>
+		$baseColor: #398B93;
+		$borderRadius: 10px;
+		$imageBig: 60px;
+		$imageSmall: 60px;
+		$padding: 10px;
+
 		.jumbotron {
 			padding-top: 150px;
 			text-align:center;
@@ -86,6 +92,195 @@
 		body {
 			background-color:#F3F1F3;
 		}
+
+		#myChart{
+			padding-left: 0;
+    		padding-right: 0;
+    		margin-top: 190px;
+    		margin-left: auto;
+    		margin-right: auto;
+    		display: block;
+    		max-width: 500px;
+    		max-height: 500px;
+
+		}
+
+		#myTable{
+			padding-left: 0;
+    		padding-right: 0;
+    		margin-top: 190px;
+    		margin-left: auto;
+    		margin-right: auto;
+    		display: block;
+    		max-width: 400px;
+    		max-height: 400px;
+		}
+
+		#loading{
+			padding-left: 0;
+    		padding-right: 0;
+    		margin-top: 190px;
+    		margin-left: auto;
+    		margin-right: auto;
+    		display: block;
+		}
+
+
+
+		.header {
+		   background-color: darken($baseColor, 5%);
+		   color: black;
+		   font-size: 1.5em;
+		   padding: 1rem;
+		   text-align: center;
+		   font-family: 'Tahoma', serif;
+		   text-transform: uppercase;
+		}
+
+		img {
+		   border-radius: 50%;
+		   height: 40px;
+		   width: 40px;
+		}
+
+		.table-users {
+		   border: 1px solid darken($baseColor, 5%);
+		   border-radius: $borderRadius;
+		   box-shadow: 3px 3px 0 rgba(0,0,0,0.1);
+		   max-width: calc(100% - 2em);
+		   margin: 1em auto;
+		   overflow: hidden;
+		   width: 800px;
+		}
+
+		table {
+		   width: 100%;
+		   
+		   td, th { 
+		      color: darken($baseColor, 10%);
+		      padding: $padding; 
+		   }
+		   
+		   td {
+		      text-align: center;
+		      vertical-align: middle;
+		      
+		      &:last-child {
+		         font-size: 0.95em;
+		         line-height: 1.4;
+		         text-align: left;
+		      }
+		   }
+		   
+		   th { 
+		      background-color: lighten($baseColor, 50%);
+		      font-weight: 300;
+		   }
+		   
+		   tr {     
+		      &:nth-child(2n) { background-color: white; }
+		      &:nth-child(2n+1) { background-color: lighten($baseColor, 55%) }
+		   }
+		}
+
+		@media screen and (max-width: 700px) {   
+		   table, tr, td { display: block; }
+		   
+		   td {
+		      &:first-child {
+		         position: absolute;
+		         top: 50%;
+		         transform: translateY(-50%);
+		         width: 60px;
+		      }
+
+		      &:not(:first-child) {
+		         clear: both;
+		         margin-left: 60px;
+		         padding: 4px 20px 4px 90px;
+		         position: relative;
+		         text-align: left;
+
+		         &:before {
+		            color: lighten($baseColor, 30%);
+		            content: '';
+		            display: block;
+		            left: 0;
+		            position: absolute;
+		         }
+		      }
+
+		      &:nth-child(2):before { content: 'Name:'; }
+		      &:nth-child(3):before { content: 'Email:'; }
+		      &:nth-child(4):before { content: 'Phone:'; }
+		      &:nth-child(5):before { content: 'Comments:'; }
+		   }
+		   
+		   tr {
+		      padding: $padding 0;
+		      position: relative;
+		      &:first-child { display: none; }
+		   }
+		}
+
+		@media screen and (max-width: 500px) {
+		   .header {
+		      background-color: transparent;
+		      color: lighten($baseColor, 60%);
+		      font-size: 2em;
+		      font-weight: 700;
+		      padding: 0;
+		      text-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+		   }
+		   
+		   img {
+		      border: 3px solid;
+		      border-color: lighten($baseColor, 50%);
+		      height: 60px;
+		      margin: 0.5rem 0;
+		      width: 60px;
+		   }
+		   
+		   td {
+		      &:first-child { 
+		         background-color: lighten($baseColor, 45%); 
+		         border-bottom: 1px solid lighten($baseColor, 30%);
+		         border-radius: $borderRadius $borderRadius 0 0;
+		         position: relative;   
+		         top: 0;
+		         transform: translateY(0);
+		         width: 100%;
+		      }
+		      
+		      &:not(:first-child) {
+		         margin: 0;
+		         padding: 5px 1em;
+		         width: 100%;
+		         
+		         &:before {
+		            font-size: .8em;
+		            padding-top: 0.3em;
+		            position: relative;
+		         }
+		      }
+		      
+		      &:last-child  { padding-bottom: 1rem !important; }
+		   
+		   tr {
+		      background-color: white !important;
+		      border: 1px solid lighten($baseColor, 20%);
+		      border-radius: $borderRadius;
+		      box-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+		      margin: 0.5rem 0;
+		      padding: 0;
+		   }
+		   
+		   .table-users { 
+		      border: none; 
+		      box-shadow: none;
+		      overflow: visible;
+		   }
+}
 	</style>
 
 	<title>Find Yo Hunny</title>
@@ -102,7 +297,7 @@
 		<div class="nav nav-justified navbar-nav">
 			<form class="navbar-form navbar-search" role="search" id="searchform" method="get" accept-charset="utf-8">
 				<div class="input-group">
-					<input class="form-control searchfield input-lg" type="text" id="searchbox" name="q" placeholder="Search">
+					<input class="form-control searchfield input-lg" type="text" id="searchbox" name="q" placeholder="Enter Instagram Username" style="width:300px">
 
 					<div class="input-group-btn">
 						<button class="searchbutton btn btn-search btn-info input-lg" type="submit">
@@ -121,14 +316,12 @@
 	  <button class="searchbutton" type="submit">
 		<i class="fa fa-search"></i>
 	  </button>
-	  <input class="searchfield" id="searchbox" name="q" type="text" placeholder="Search">
+	  <input class="searchfield" id="searchbox" name="q" type="text" placeholder="Enter Insta">
 
 	  class="btn searchbutton btn-search btn-info"
-</form> -->
+</form>  -->
 
-
-	{% if search%}
-		<div id="object" class="result container w3-container w3-center w3-animate-bottom w3-animate-opacity"">
+		<!-- <div id="object" class="result container w3-container w3-center w3-animate-bottom w3-animate-opacity"">
 
 		<button type="button" class="close" id='hide' aria-label="Close">
 		  	<span aria-hidden="true">&times;</span>
@@ -150,11 +343,95 @@
 				width = 180>
 			</div>
 		</div>
+	 </div> -->
 
-	 </div>
+	 <!-- {% if search%}
+	 <img src="http://bestanimations.com/Science/Gears/loadinggears/loading-gears-animation-13-3.gif" alt="" />
+	 {% endif%}
+ -->
+	 {% if search%}
+	<div>
+			<canvas id="myChart"></canvas>
+			
+	</div>
 
+   <div class="table-users">
+   <div class="header">Top Candidates</div>
+   
+   <table cellspacing="0">
+      <tr>
+         <th>Picture</th>
+         <th>Instagram Name</th>
+         <th>❤️ Likelihood</th>
+         <th>Sentiment</th> -->
+         <th width="230">Trigger words used</th>
+      </tr>
+
+      <tr>
+         <td><img src="http://lorempixel.com/100/100/people/1" alt="" /></td>
+         <td>Jane Doe</td>
+         <td>jane.doe@foo.com</td>
+         <td>01 800 2000</td>
+         <td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. </td>
+      </tr>
+
+      <tr>
+         <td><img src="http://lorempixel.com/100/100/sports/2" alt="" /></td>
+         <td>John Doe</td>
+         <td>john.doe@foo.com</td>
+         <td>01 800 2000</td>
+         <td>Blanditiis, aliquid numquam iure voluptatibus ut maiores explicabo ducimus neque, nesciunt rerum perferendis, inventore.</td>
+      </tr>
+
+      <tr>
+         <td><img src="http://lorempixel.com/100/100/people/9" alt="" /></td>
+         <td>Jane Smith</td>
+         <td>jane.smith@foo.com</td>
+         <td>01 800 2000</td>
+         <td> Culpa praesentium unde pariatur fugit eos recusandae voluptas.</td>
+      </tr>
+      
+      <tr>
+         <td><img src="http://lorempixel.com/100/100/people/3" alt="" /></td>
+         <td>John Smith</td>
+         <td>john.smith@foo.com</td>
+         <td>01 800 2000</td>
+         <td>Aut voluptatum accusantium, eveniet, sapiente quaerat adipisci consequatur maxime temporibus quas, dolorem impedit.</td>
+      </tr>
+   </table>
+</div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+	<script>
+		var ctx = document.getElementById('myChart').getContext('2d');
+		var chart = new Chart(ctx, {
+	    // The type of chart we want to create
+	    type: 'radar',
+
+	    // The data for our dataset
+	    data: {
+	        labels: ["January", "February", "March", "April", "May", "June", "July"],
+	        datasets: [{
+	            label: "My First dataset",
+	            backgroundColor: 'rgb(255, 99, 132)',
+	            borderColor: 'rgb(255, 99, 132)',
+	            data: [0, 10, 5, 2, 20, 30, 45],
+	        }]
+	    },
+
+	    // Configuration options go here
+	    options: {
+	    	title: {
+            	display: true,
+            	text: 'Radar Chart',
+            	fontSize: 22
+        	}
+	    }
+	});
+	</script>
 	{% endif %}
 
+<!--
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script>
 	$(document).ready(function(){
@@ -162,6 +439,6 @@
 			$("#object").hide();
 		});
 	});
-	</script>
+	</script> -->
 
 </body>
