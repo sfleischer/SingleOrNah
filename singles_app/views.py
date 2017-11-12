@@ -5,6 +5,8 @@ from .api import api
 from django.shortcuts import render
 from random import randint
 
+import numpy as np
+
 # Create your views here.
 
 def index(request):
@@ -26,6 +28,7 @@ def index(request):
                 'search' : None
             }
         else :
+
             context = {
                 'error' : None,
                 'search' : search,
@@ -34,7 +37,10 @@ def index(request):
                 'top3' : values['top_three'][2][0],
                 'pic1' : values['top_three'][0][1]["profile_pic_url"],
                 'pic2' : values['top_three'][1][1]["profile_pic_url"],
-                'pic3' : values['top_three'][2][1]["profile_pic_url"]
+                'pic3' : values['top_three'][2][1]["profile_pic_url"],
+                'val1' : round(np.mean(values['top_three'][0][1]["comment_sentiment"]) * 100, 2),
+                'val2' : round(np.mean(values['top_three'][1][1]["comment_sentiment"]) * 100, 2),
+                'val3' : round(np.mean(values['top_three'][2][1]["comment_sentiment"]) * 100, 2),
             }
     else:
         context = None

@@ -134,7 +134,6 @@
 		   padding: 1rem;
 		   text-align: center;
 		   font-family: 'Tahoma', serif;
-		   text-transform: uppercase;
 		}
 
 		img {
@@ -146,7 +145,6 @@
 		.table-users {
 		   border: 1px solid darken($baseColor, 5%);
 		   border-radius: $borderRadius;
-		   box-shadow: 3px 3px 0 rgba(0,0,0,0.1);
 		   max-width: calc(100% - 2em);
 		   margin: 1em auto;
 		   overflow: hidden;
@@ -303,7 +301,7 @@
 						<button class="searchbutton btn btn-search btn-info input-lg" type="submit">
 							<i class="fa fa-search"></i>
 							<span class="glyphicon glyphicon-search"></span>
-							<span class="label-icon">Search</span>
+							<span class="label-icon">Analyze</span>
 						</button>
 					</div>
 				</div>  
@@ -351,7 +349,7 @@
  -->
  	{% if error%}
  	<div>
- 	<span style="display: block; text-align: center; margin-top: 250px; font-size: 30px; font-family:  color: blue;">ERROR, Instagram handle is invalid or private</span></div>
+ 	<span style="display: block; text-align: center; margin-top: 250px; font-size: 30px; font-family:  color: blue;">Error, Instagram handle is invalid or private</span></div>
 
  	{% elif search%}
 	<div>
@@ -363,36 +361,24 @@
    <div class="header">Top Candidates</div>
    
    <table cellspacing="0">
-      <tr>
-         <th>Picture</th>
-         <th>Instagram Name</th>
-         <th>❤️ Likelihood</th>
-         <th>Sentiment</th> -->
-         <th width="230">Trigger words used</th>
-      </tr>
+
 
       <tr>
          <td><img src={{pic1}} alt="" /></td>
          <td>{{top1}}</td>
-         <td>jane.doe@foo.com</td>
-         <td>01 800 2000</td>
-         <td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. </td>
+         <td>{{val1}}</td>
       </tr>
 
       <tr>
          <td><img src={{pic2}} alt="" /></td>
          <td>{{top2}}</td>
-         <td>john.doe@foo.com</td>
-         <td>01 800 2000</td>
-         <td>Blanditiis, aliquid numquam iure voluptatibus ut maiores explicabo ducimus neque, nesciunt rerum perferendis, inventore.</td>
+         <td>{{val2}}</td>
       </tr>
 
       <tr>
          <td><img src={{pic3}} alt="" /></td>
          <td>{{top3}}</td>
-         <td>jane.smith@foo.com</td>
-         <td>01 800 2000</td>
-         <td> Culpa praesentium unde pariatur fugit eos recusandae voluptas.</td>
+         <td>{{val3}}</td>
       </tr>
       
       <!-- <tr>
