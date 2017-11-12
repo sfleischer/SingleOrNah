@@ -6,7 +6,7 @@ import http.client, urllib, base64, json, requests
 #import requests
 
 # Replace the subscription_key string value with your valid subscription key.
-subscription_key = 'dfbf8eff05414406a5e0d33268caa0f9'
+subscription_key = 'fe55c8416d2a425a92e221cde7b8b7f7'
 
 # You must use the same region in your REST API call as you used to obtain your subscription keys.
 # For example, if you obtained your subscription keys from the westus region, replace 
