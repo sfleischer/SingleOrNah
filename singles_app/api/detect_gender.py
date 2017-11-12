@@ -6,12 +6,12 @@ import http.client, urllib, base64, json, requests
 #import requests
 
 # Replace the subscription_key string value with your valid subscription key.
-subscription_key = 'fe55c8416d2a425a92e221cde7b8b7f7'
+subscription_key = '0db63928849542f3827c4b93d2c17837'
 
 # You must use the same region in your REST API call as you used to obtain your subscription keys.
 # For example, if you obtained your subscription keys from the westus region, replace 
 # "westcentralus" in the URI below with "westus".
-uri_base = 'https://westcentralus.api.cognitive.microsoft.com'
+uri_base = 'https://eastus.api.cognitive.microsoft.com'
 
 # Request headers.
 headers = {
@@ -39,7 +39,7 @@ def gather_info_profile_pic (url):
     # Execute the REST API call and get the response.
     response = requests.request('POST', uri_base + '/face/v1.0/detect', json=body, data=None, headers=headers, params=params)
     parsed = json.loads(response.text)
-
+    print(parsed)
     '''
     conn = http.client.HTTPSConnection('westcentralus.api.cognitive.microsoft.com')
     conn.request("POST", "/face/v1.0/detect?%s" % params, body, headers)

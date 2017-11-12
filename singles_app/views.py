@@ -42,7 +42,7 @@ def index(request):
                 'val1' : round(np.mean(values['top_three'][0][1]["comment_sentiment"]) * 100, 2),
                 'val2' : round(np.mean(values['top_three'][1][1]["comment_sentiment"]) * 100, 2),
                 'val3' : round(np.mean(values['top_three'][2][1]["comment_sentiment"]) * 100, 2),
-                'percent' : int(values['p'] * 100),
+                'percent' : 100 - int(values['p'] * 100),
                 'profile_pic_url' : values['target_pro_pic']
             }
     else:

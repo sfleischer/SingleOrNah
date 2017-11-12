@@ -3,7 +3,8 @@
 <head>
 	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<link href='http://fonts.googleapis.com/css?family=Oleo+Script' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Oleo+Script' rel='stylesheet' type='text/css'>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 	<style>
 		.large-title {
@@ -184,18 +185,31 @@
  	{% elif search%}
 	
 	<div class="row">
-		<div class="col-md-3"></div>
+		<div class="col-md-2"></div>
 		<div class="col-md-2"><img class="target-pic" src="{{profile_pic_url}}"></div>
-		<div id="percent" class='mid-title col-md-4'>{{percent}}% chance</div>
+		<div id="percent" class='mid-title col-md-5'>{{percent}}% chance single</div>
 		<div class="col-md-5"></div>
-
- 	<script>
- 	 	high_prob = ["Go shoot your shot!", "Go get em!", "What are you waiting for?", "Should I book your date for Applebee's?", "Whooo hoo!"];
+	</div>
+ 	
+	<div>
+		<div id="message" class="small-title"></div>
+	</div>
+	<script>
+ 	 	high_prob = ["Go for it!", "Go get em!", "What are you waiting for?", "Should I book your date for Applebee's?", "Whooo hoo!"];
  	 	med_prob = ["You could try...", "Can't hurt to send a DM", "Flip a coin at this point", "Why not?", "Possibly..."];
  	 	low_prob = ["There's plenty more fish in the ocean", "Nah...", "You may need a few more flowers", "Maybe start showering?"];
  	 	random_num = Math.floor(Math.random() * 5);
+
+ 	 	if ({{percent}} < 30) {
+ 	 		// not single
+ 	 		$("#message").text(low_prob[random_num])
+ 	 	} else if ({{percent}} < 60) {
+ 	 		$("#message").text(med_prob[random_num])
+ 	 	} else {
+ 	 		$("#message").text(high_prob[random_num])
+ 	 	}
+ 	 	
 	</script>
-	<span style="small-title"><i>Go shoot your shot!</i></span>
 
     <div class="table-users">
    		<h3 class="center">Top Candidates</h3>
@@ -223,36 +237,9 @@
 	  	</div>
 	</div>
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
-	<script>
-		var ctx = document.getElementById('myChart').getContext('2d');
-		var chart = new Chart(ctx, {
-	    // The type of chart we want to create
-	    type: 'radar',
-
-	    // The data for our dataset
-	    data: {
-	        labels: ["January", "February", "March", "April", "May", "June", "July"],
-	        datasets: [{
-	            backgroundColor: 'rgb(255, 99, 132)',
-	            borderColor: 'rgb(255, 99, 132)',
-	            data: [0, 10, 5, 2, 20, 30, 45],
-	        }]
-	    },
-
-	    // Configuration options go here
-	    options: {
-	    	title: {
-            	display: true,
-            	text: 'Relevant Categories',
-            	fontSize: 25
-        	}
-	    }
-	});
-			 chart.options.legend.display = false;
-	</script>
-
-	<footer> <div class="footer navbar-fixed-bottom"> &nbsp Powered by Microsoft Azure</div></footer>
+	<footer> 
+		<div class="footer navbar-fixed-bottom"> &nbsp Powered by Microsoft Azure</div>
+	</footer>
 
 	{% endif %}
 

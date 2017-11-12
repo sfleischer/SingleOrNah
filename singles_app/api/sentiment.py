@@ -19,11 +19,12 @@ def get_sentiment(posts):
     url = 'https://eastus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment'
     headers = {
         'Content-Type': 'application/json',
-        'Ocp-Apim-Subscription-Key': '9da2b93062e44723aefba7df7e345820'
+        #'Ocp-Apim-Subscription-Key': '9da2b93062e44723aefba7df7e345820'
+        'Ocp-Apim-Subscription-Key': '0ea0c0073311487f95617cc397b145c4'
     }
 
     response = requests.post(url, data=str(posts).encode('utf-8'), headers=headers)
-    print(response.json())
+    #print(response.json())
     try: 
         toReturn = {}
         for d in response.json()['documents']:
