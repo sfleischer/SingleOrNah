@@ -12,6 +12,10 @@ def api_entry(target_user, username, password):
     if target_user is None or username is None or password is None:
         return None
     user = User(target_user, username, password)
+
+    if not user.isValidUser():
+        return None
+
     u_dict = UsersDict()
 
     profile_pic_url = user.getProfilePicture()

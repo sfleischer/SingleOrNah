@@ -9,14 +9,25 @@ def index(request):
     search = request.GET.get('q')
     
     if search:
-        values = api.api_entry(search, "phacks1", "penn123")
+        if search[0] == '@':
+            search = search[1:]
+        values = api.api_entry(search, "phacks3", "penn123")
 
-        context = {
-            'search' : search,
-            'top1' : values['top_three'][0][0],
-            'top2' : values['top_three'][1][0],
-            'top3' : values['top_three'][2][0],
-        }
+        context = None
+
+        if values is None:
+            context = {
+                'error' : "yes",
+                'search' : None
+            }
+        else :
+            context = {
+                'error' : None,
+                'search' : search,
+                'top1' : values['top_three'][0][0],
+                'top2' : values['top_three'][1][0],
+                'top3' : values['top_three'][2][0],
+            }
     else:
         context = None
     return render(request, 'index.html', context)

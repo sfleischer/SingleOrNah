@@ -349,7 +349,11 @@
 	 <img src="http://bestanimations.com/Science/Gears/loadinggears/loading-gears-animation-13-3.gif" alt="" />
 	 {% endif%}
  -->
-	 {% if search%}
+ 	{% if error%}
+ 	<div>
+ 	<span style="display: block; text-align: center; margin-top: 250px; font-size: 30px; font-family:  color: blue;">ERROR, Instagram handle is invalid or private</span></div>
+
+ 	{% elif search%}
 	<div>
 			<canvas id="myChart"></canvas>
 			

@@ -142,12 +142,14 @@ class InstagramScraper(object):
 
         if comments:
             try:
-                while True:
+                count = 0
+                while count < 20:
                     for item in comments:
                         yield item
 
                     if end_cursor:
                         comments, end_cursor = self.__query_comments(shortcode, end_cursor)
+                        count += 1
                     else:
                         return
             except ValueError:
