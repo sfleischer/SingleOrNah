@@ -32,6 +32,9 @@ def index(request):
                 'top1' : values['top_three'][0][0],
                 'top2' : values['top_three'][1][0],
                 'top3' : values['top_three'][2][0],
+                'pic1' : values['top_three'][0][1]["profile_pic_url"],
+                'pic2' : values['top_three'][1][1]["profile_pic_url"],
+                'pic3' : values['top_three'][2][1]["profile_pic_url"]
             }
     else:
         context = None
