@@ -3,15 +3,20 @@ from __future__ import unicode_literals
 from django.http import HttpResponse
 from .api import api
 from django.shortcuts import render
+from random import randint
 
 # Create your views here.
+
 def index(request):
     search = request.GET.get('q')
+    keys = ["phacks1", "phacks2", "phacks3", "phacks4", "wae3wae3", "singleornaw1154"]
+    values = ["penn123", "penn123", "penn123", "penn123", "phacks", "phacks"]
     
     if search:
         if search[0] == '@':
             search = search[1:]
-        values = api.api_entry(search, "phacks3", "penn123")
+        r = randint(0, len(keys)-1)
+        values = api.api_entry(search, keys[r], values[r])
 
         context = None
 
