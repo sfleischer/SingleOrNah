@@ -5,7 +5,6 @@ import argparse
 import codecs
 import errno
 import glob
-from operator import itemgetter
 import json
 import logging.config
 import os
@@ -15,6 +14,7 @@ import textwrap
 import time
 import warnings
 import pprint
+from operator import itemgetter
 
 import concurrent.futures
 import requests

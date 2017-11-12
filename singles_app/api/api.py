@@ -15,7 +15,6 @@ def api_entry(target_user, username, password):
     u_dict = UsersDict()
 
     profile_pic_url = user.getProfilePicture()
-    print(profile_pic_url)
 
     [user_gender, user_age] = gather_info_profile_pic(profile_pic_url)
 
@@ -32,6 +31,8 @@ def api_entry(target_user, username, password):
             username = comment['owner']['username']
             if username == target_user:
                 continue
+            commenter_propic_url = comment['owner']['profile_pic_url']
+            u_dict.set_propic_url(username, commenter_propic_url)
             u_dict.incr_user_field_by(username, 'num_comments', 1)
             comment_text.append({
                 'language': 'en',
@@ -57,7 +58,6 @@ def api_entry(target_user, username, password):
             'text': caption
             })
         caption_counter += 1
-    print(comment_text)
     # obtain comment sentiments
     comment_sentiment = get_sentiment({ 'documents': comment_text })
     if (comment_sentiment):
@@ -92,10 +92,13 @@ def api_entry(target_user, username, password):
     np.mean(list(comment_sentiment.values())) * 0.2) + \
     np.mean([np.mean(v['comment_keyword_sum']) for k,v in u_dict.users.items()]) * 5
 
-    return {
+    toReturn = {
         'p': p,
         'top_three': top_three
     }
+
+    print(toReturn)
+    return toReturn
 
 
 def get_top_three(u_dict):
