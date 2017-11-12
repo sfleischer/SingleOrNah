@@ -149,7 +149,7 @@
 		}
 	</style>
 
-	<title>Find Yo Hunny</title>
+	<title>Single or Nah</title>
 </head>
 
 <body>
@@ -188,7 +188,14 @@
 		<div class="col-md-2"><img class="target-pic" src="{{profile_pic_url}}"></div>
 		<div id="percent" class='mid-title col-md-4'>{{percent}}% chance</div>
 		<div class="col-md-5"></div>
-	</div>
+
+ 	<script>
+ 	 	high_prob = ["Go shoot your shot!", "Go get em!", "What are you waiting for?", "Should I book your date for Applebee's?", "Whooo hoo!"];
+ 	 	med_prob = ["You could try...", "Can't hurt to send a DM", "Flip a coin at this point", "Why not?", "Possibly..."];
+ 	 	low_prob = ["There's plenty more fish in the ocean", "Nah...", "You may need a few more flowers", "Maybe start showering?"];
+ 	 	random_num = Math.floor(Math.random() * 5);
+	</script>
+	<span style="small-title"><i>Go shoot your shot!</i></span>
 
     <div class="table-users">
    		<h3 class="center">Top Candidates</h3>
@@ -227,7 +234,6 @@
 	    data: {
 	        labels: ["January", "February", "March", "April", "May", "June", "July"],
 	        datasets: [{
-	            label: "My First dataset",
 	            backgroundColor: 'rgb(255, 99, 132)',
 	            borderColor: 'rgb(255, 99, 132)',
 	            data: [0, 10, 5, 2, 20, 30, 45],
@@ -238,11 +244,12 @@
 	    options: {
 	    	title: {
             	display: true,
-            	text: 'Radar Chart',
-            	fontSize: 22
+            	text: 'Relevant Categories',
+            	fontSize: 25
         	}
 	    }
 	});
+			 chart.options.legend.display = false;
 	</script>
 
 	<footer> <div class="footer navbar-fixed-bottom"> &nbsp Powered by Microsoft Azure</div></footer>
