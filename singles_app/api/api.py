@@ -90,11 +90,14 @@ def api_entry(target_user, username, password):
 
     top_three = get_top_three(u_dict)
      
-    p = ((average_gender_smile*0.6) + \
-    (average_caption_sentiment*0.2) + \
-    (cummulative_keyword_sum*2) + \
-    np.mean(list(comment_sentiment.values())) * 0.2) + \
-    np.mean([np.mean(v['comment_keyword_sum']) for k,v in u_dict.users.items()]) * 5
+    p = average_gender_smile*0.6 + average_caption_sentiment*0.2 + cummulative_keyword_sum*2
+
+    if not comment_sentiment is None:
+        p += np.mean(list(comment_sentiment.values())) * 0.2
+    
+    mean = np.mean([np.mean(v['comment_keyword_sum']) for k,v in u_dict.users.items()]) * 5
+    if mean:
+        p += mean
 
     toReturn = {
         'p': p,

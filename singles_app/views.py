@@ -6,6 +6,7 @@ from django.shortcuts import render
 from random import randint
 
 import numpy as np
+import math
 
 # Create your views here.
 
@@ -22,7 +23,7 @@ def index(request):
 
         context = None
 
-        if values is None:
+        if values is None or math.isnan(values['p']):
             context = {
                 'error' : "yes",
                 'search' : None
@@ -41,6 +42,7 @@ def index(request):
                 'val1' : round(np.mean(values['top_three'][0][1]["comment_sentiment"]) * 100, 2),
                 'val2' : round(np.mean(values['top_three'][1][1]["comment_sentiment"]) * 100, 2),
                 'val3' : round(np.mean(values['top_three'][2][1]["comment_sentiment"]) * 100, 2),
+                'percent' : int(values['p'] * 100)
             }
     else:
         context = None
