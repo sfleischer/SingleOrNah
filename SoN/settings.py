@@ -23,7 +23,7 @@ Temp_Path = os.path.realpath('singles_app')
 SECRET_KEY = '=ipe9j_ct%@)n(dusodtjr(renk_4*oulrhll^krwlp3ulvw1p'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['singleornah.azurewebsites.net', 'localhost']
 
