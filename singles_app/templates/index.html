@@ -349,17 +349,19 @@
  -->
  	{% if error%}
  	<div>
-<<<<<<< Updated upstream
- 	<span style="display: block; text-align: center; margin-top: 250px; font-size: 30px; font-family:  color: blue;">Error, Instagram handle is invalid or private</span></div>
-=======
+
  	<span style="display: block; text-align: center; margin-top: 260px; font-size: 30px; font-family:  color: blue;">ERROR, Instagram handle is invalid or private</span></div>
->>>>>>> Stashed changes
 
  	{% elif search%}
 	<span style="display: block; text-align: center; margin-top: 260px; font-size: 30px; font-family:  color: blue;">
 	 	<b>99%</b> Chance Your Target is Single!</span></div>
 	 <span style="display: block; text-align: center; margin-top: 20px; font-size: 20px; font-family:  color: blue;">
 	 	<i>Go shoot your shot!</i></span></div>
+ 	 <script>
+ 	 	high_prob = ["Go shoot your shot!"];
+ 	 	med_prob = ["You could try...", "Can't hurt to send a DM", "Flip a coin at this point", "Why not?"];
+ 	 	low_prob = ["There's plenty more fish in the ocean"];
+	 </script>
 
 	<div>
 			<canvas id="myChart"></canvas>
