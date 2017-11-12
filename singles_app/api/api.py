@@ -106,7 +106,7 @@ def api_entry(target_user, username, password):
 
 
 def get_top_three(u_dict):
-    tup_list = list(u_dict.users.items())
+    tup_list = [tup for tup in list(u_dict.users.items()) if 'num_comments' in tup[1] and 'comment_sentiment' in tup[1]]
     tup_list.sort(key=lambda tup: tup[1]['num_comments']*np.mean(tup[1]['comment_sentiment']), reverse=True)
     return tup_list[0:3]
 
