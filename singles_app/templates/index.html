@@ -145,10 +145,6 @@
 		.table-users {
 		   border: 1px solid darken($baseColor, 5%);
 		   border-radius: $borderRadius;
-<<<<<<< HEAD
-=======
-		   /*box-shadow: 3px 3px 0 rgba(0,0,0,0.1);*/
->>>>>>> origin/master
 		   max-width: calc(100% - 2em);
 		   margin: 1em auto;
 		   overflow: hidden;
@@ -285,13 +281,13 @@
 }
 	</style>
 
-	<title>Find Yo Hunny</title>
+	<title>Single or Nah</title>
 </head>
 
 <body>
 	<div class = "jumbotron jumbotron-fluid vertical-center">
 		<h1 class = "logo">
-			Single or Naw?
+			Single or Nah?
 		</h1>
 	</div>
 
@@ -353,9 +349,18 @@
  -->
  	{% if error%}
  	<div>
+<<<<<<< Updated upstream
  	<span style="display: block; text-align: center; margin-top: 250px; font-size: 30px; font-family:  color: blue;">Error, Instagram handle is invalid or private</span></div>
+=======
+ 	<span style="display: block; text-align: center; margin-top: 260px; font-size: 30px; font-family:  color: blue;">ERROR, Instagram handle is invalid or private</span></div>
+>>>>>>> Stashed changes
 
  	{% elif search%}
+	<span style="display: block; text-align: center; margin-top: 260px; font-size: 30px; font-family:  color: blue;">
+	 	<b>99%</b> Chance Your Target is Single!</span></div>
+	 <span style="display: block; text-align: center; margin-top: 20px; font-size: 20px; font-family:  color: blue;">
+	 	<i>Go shoot your shot!</i></span></div>
+
 	<div>
 			<canvas id="myChart"></canvas>
 			
@@ -404,7 +409,6 @@
 	    data: {
 	        labels: ["January", "February", "March", "April", "May", "June", "July"],
 	        datasets: [{
-	            label: "My First dataset",
 	            backgroundColor: 'rgb(255, 99, 132)',
 	            borderColor: 'rgb(255, 99, 132)',
 	            data: [0, 10, 5, 2, 20, 30, 45],
@@ -415,11 +419,12 @@
 	    options: {
 	    	title: {
             	display: true,
-            	text: 'Radar Chart',
-            	fontSize: 22
+            	text: 'Relevant Categories',
+            	fontSize: 25
         	}
 	    }
 	});
+			 chart.options.legend.display = false;
 	</script>
 
 	<footer> <div class="footer navbar-fixed-bottom"> &nbsp Powered by Microsoft Azure. </div></footer>
