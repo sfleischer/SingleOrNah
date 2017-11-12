@@ -101,7 +101,8 @@ def api_entry(target_user, username, password):
 
     toReturn = {
         'p': p,
-        'top_three': top_three
+        'top_three': top_three,
+        'target_pro_pic': profile_pic_url
     }
 
     print(toReturn)

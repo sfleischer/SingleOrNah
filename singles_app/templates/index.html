@@ -130,6 +130,11 @@
 		   width: 800px;
 		}
 
+		.target-pic {
+			margin-top: 55px;
+			margin-left: 60%;
+		}
+
 		@media screen and (max-width: 700px) {   
 		   table, tr, td { display: block; }
 
@@ -177,8 +182,13 @@
  	</div>
 
  	{% elif search%}
-
-	<div id="percent" class='mid-title'>{{percent}}% chance</div>
+	
+	<div class="row">
+		<div class="col-md-3"></div>
+		<div class="col-md-2"><img class="target-pic" src="{{profile_pic_url}}"></div>
+		<div id="percent" class='mid-title col-md-4'>{{percent}}% chance</div>
+		<div class="col-md-5"></div>
+	</div>
 
     <div class="table-users">
    		<h3 class="center">Top Candidates</h3>
